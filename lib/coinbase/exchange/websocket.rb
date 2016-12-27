@@ -3,7 +3,7 @@ module Coinbase
     # Websocket client for Coinbase Exchange
     class Websocket
       def initialize(options = {})
-        @ws_url = options[:ws_url] || "wss://ws-feed.exchange.coinbase.com"
+        @ws_url = options[:ws_url] || "wss://ws-feed.gdax.com"
         @product = options[:product_id] || 'BTC-USD'
         @keepalive = options[:keepalive] || false
 
@@ -112,7 +112,7 @@ module Coinbase
       end
 
       def ws_error(event)
-        fail WebsocketError, event.data
+        fail WebsocketError, event.message
       end
     end
   end
