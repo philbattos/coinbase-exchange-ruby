@@ -16,6 +16,9 @@ module Coinbase
         end
       end
 
+      # NOTE: The "paginate" flag has been removed from all actions below since EventMachine doesn't
+      #       work when "paginate: true" is included as a param. See adapters/em_http.rb#http_verb.
+
       #
       # Market Data
       #
@@ -63,7 +66,7 @@ module Coinbase
         product = params[:product_id] || @default_product
 
         out = nil
-        get("/products/#{product}/trades", params, paginate: true) do |resp|
+        get("/products/#{product}/trades", params) do |resp|
           out = response_collection(resp)
           yield(out, resp) if block_given?
         end
@@ -126,7 +129,7 @@ module Coinbase
 
       def account_history(id, params = {})
         out = nil
-        get("/accounts/#{id}/ledger", params, paginate: true) do |resp|
+        get("/accounts/#{id}/ledger", params) do |resp|
           out = response_collection(resp)
           yield(out, resp) if block_given?
         end
@@ -135,7 +138,7 @@ module Coinbase
 
       def account_holds(id, params = {})
         out = nil
-        get("/accounts/#{id}/holds", params, paginate: true) do |resp|
+        get("/accounts/#{id}/holds", params) do |resp|
           out = response_collection(resp)
           yield(out, resp) if block_given?
         end
@@ -188,7 +191,7 @@ module Coinbase
         params[:status] ||= "all"
 
         out = nil
-        get("/orders", params, paginate: true) do |resp|
+        get("/orders", params) do |resp|
           out = response_collection(resp)
           yield(out, resp) if block_given?
         end
@@ -206,7 +209,7 @@ module Coinbase
 
       def fills(params = {})
         out = nil
-        get("/fills", params, paginate: true) do |resp|
+        get("/fills", params) do |resp|
           out = response_collection(resp)
           yield(out, resp) if block_given?
         end

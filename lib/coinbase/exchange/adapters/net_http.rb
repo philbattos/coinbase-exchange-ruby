@@ -4,9 +4,9 @@ module Coinbase
     class NetHTTPClient < APIClient
       def initialize(api_key = '', api_secret = '', api_pass = '', options = {})
         super(api_key, api_secret, api_pass, options)
-        @conn = Net::HTTP.new(@api_uri.host, @api_uri.port)
-        @conn.use_ssl = true if @api_uri.scheme == 'https'
-        @conn.cert_store = self.class.whitelisted_certificates
+        @conn             = Net::HTTP.new(@api_uri.host, @api_uri.port)
+        @conn.use_ssl     = true if @api_uri.scheme == 'https'
+        @conn.cert_store  = self.class.whitelisted_certificates
         @conn.ssl_version = :TLSv1
       end
 
@@ -14,8 +14,8 @@ module Coinbase
 
       def http_verb(method, path, body = nil)
         case method
-        when 'GET' then req = Net::HTTP::Get.new(path)
-        when 'POST' then req = Net::HTTP::Post.new(path)
+        when 'GET'    then req = Net::HTTP::Get.new(path)
+        when 'POST'   then req = Net::HTTP::Post.new(path)
         when 'DELETE' then req = Net::HTTP::Delete.new(path)
         else fail
         end
@@ -26,11 +26,11 @@ module Coinbase
         signature = Base64.encode64(
           OpenSSL::HMAC.digest('sha256', Base64.decode64(@api_secret).strip,
                                "#{req_ts}#{method}#{path}#{body}")).strip
-        req['Content-Type'] = 'application/json'
-        req['CB-ACCESS-TIMESTAMP'] = req_ts
+        req['Content-Type']         = 'application/json'
+        req['CB-ACCESS-TIMESTAMP']  = req_ts
         req['CB-ACCESS-PASSPHRASE'] = @api_pass
-        req['CB-ACCESS-KEY'] = @api_key
-        req['CB-ACCESS-SIGN'] = signature
+        req['CB-ACCESS-KEY']        = @api_key
+        req['CB-ACCESS-SIGN']       = signature
 
         resp = @conn.request(req)
         case resp.code

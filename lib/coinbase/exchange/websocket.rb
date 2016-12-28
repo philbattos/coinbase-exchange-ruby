@@ -95,11 +95,11 @@ module Coinbase
         @message_cb.call(data)
         case data['type']
         when 'received' then @received_cb.call(data)
-        when 'open' then @open_cb.call(data)
-        when 'match' then @match_cb.call(data)
-        when 'change' then @change_cb.call(data)
-        when 'done' then @done_cb.call(data)
-        when 'error' then @error_cb.call(data)
+        when 'open'     then @open_cb.call(data)
+        when 'match'    then @match_cb.call(data)
+        when 'change'   then @change_cb.call(data)
+        when 'done'     then @done_cb.call(data)
+        when 'error'    then @error_cb.call(data)
         end
       end
 
@@ -112,7 +112,7 @@ module Coinbase
       end
 
       def ws_error(event)
-        fail WebsocketError, event.message
+        fail WebsocketError, event.message # NOTE: was event.data previously
       end
     end
   end
